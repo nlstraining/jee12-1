@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>webapp2</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>InvokeServlet</display-name>
+    <servlet-name>InvokeServlet</servlet-name>
+    <servlet-class>com.nlsinc.servlets.InvokeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>InvokeServlet</servlet-name>
+    <url-pattern>/invoke</url-pattern>
+  </servlet-mapping>
+  <context-param>
+    <param-name>url</param-name>
+    <param-value>jdbc:mysql://localhost:3306/music</param-value>
+  </context-param>
+  <context-param>
+    <param-name>username</param-name>
+    <param-value>root</param-value>
+  </context-param>
+  <context-param>
+    <param-name>password</param-name>
+    <param-value>test</param-value>
+  </context-param>
+  <servlet>
+    <description></description>
+    <display-name>TestServlet</display-name>
+    <servlet-name>TestServlet</servlet-name>
+    <servlet-class>com.nlsinc.servlets.TestServlet</servlet-class>
+    <init-param>
+      <description></description>
+      <param-name>purpose</param-name>
+      <param-value>testcontext</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TestServlet</servlet-name>
+    <url-pattern>/test</url-pattern>
+  </servlet-mapping>
+</web-app>
+
+
+
+
+
+<!-- class A{ int data = 10; public int getData(){return data;} } class B{ 
+	void m(){ A a = new A(); int d = a.getData(); } } -->

@@ -8,15 +8,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class InvokeServlet
- *  For every servlet the container creates a seperate ServletConfig object - Servlet - ServletConfig => 1-1 relationship
+ * Servlet implementation class InvokeServlet For every servlet the container
+ * creates a seperate ServletConfig object - Servlet - ServletConfig => 1-1
+ * relationship
  */
 public class InvokeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -45,37 +48,46 @@ public class InvokeServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		String user = (request.getParameter("user"));   //  for registration the user must be existing user
+		String user = (request.getParameter("user")); // for registration the
+														// user must be existing
+														// user
 		String password = (request.getParameter("password"));
-		
-		// to verify with database we need to connect to db 
-		// for this we need db connection properites declared in web.xml file 
-		// the data in <init-params> will be available through a framework object ServletConfig
-		
+
+		// to verify with database we need to connect to db
+		// for this we need db connection properites declared in web.xml file
+		// the data in <init-params> will be available through a framework
+		// object ServletConfig
+
 		ServletConfig config = getServletConfig();
-		
-		String url = config.getInitParameter("url");
-		String dbUser = config.getInitParameter("username");
-		String dbPwd = config.getInitParameter("password");
+		ServletContext ctxt = config.getServletContext();
+		String url = ctxt.getInitParameter("url");
+		String dbUser = ctxt.getInitParameter("username");
+		String dbPwd = ctxt.getInitParameter("password");
 		PrintWriter out = response.getWriter();
-		
+
 		try {
-			  Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection(url,dbUser,dbPwd);
-	         //out.println("connected to db..");
-			
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url, dbUser, dbPwd);
+			// out.println("connected to db..");
+
 			Statement st = con.createStatement();
-			String sql = "select * from registration where username='"+user+"' and password='"+ password+"'";
+			String sql = "select * from registration where username='" + user
+					+ "' and password='" + password + "'";
 			ResultSet rs = st.executeQuery(sql);
-			if(rs.next())
-				out.println("welcome"); 
-			else
-				out.println("User not found");
-			
+			RequestDispatcher disp;
+			if (rs.next()){
+				// disp =  ctxt.getRequestDispatcher("/welcome.html");
+				disp =  ctxt.getRequestDispatcher("/home.jsp");
+				 disp.forward(request, response);// home.jsp continues processing the request
+			}
+			else{
+				 disp =  ctxt.getRequestDispatcher("/register.html");
+				 disp.forward(request, response);
+			}
 			rs.close();
 			st.close();
 			con.close();
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
